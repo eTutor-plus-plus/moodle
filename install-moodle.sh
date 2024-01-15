@@ -27,3 +27,5 @@ runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=smtphosts --se
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=noreplyaddress --set=etutor@example.com
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=enablewsdocumentation --set=1
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=debug --set=32767
+runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=cookiesecure --set=0
+runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=curlsecurityblockedhosts --set=""
