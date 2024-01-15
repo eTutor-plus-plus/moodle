@@ -1,0 +1,167 @@
+import json
+import requests
+
+# Constants
+TASK_APP_HOST = '127.0.0.1'
+TASK_APP_PORT = '8081'
+TASK_APP_KEY = 'jobe-server-key'
+HEADERS = {'Accept': 'application/json', 'X-API-KEY': TASK_APP_KEY}
+SUBMIT_TIMEOUT = 10  # max. seconds for the submission id to be available
+GRADING_TIMEOUT = 15  # max. seconds for the grading to be available
+
+
+def construct_submission_data():
+    """
+    Constructs the submission data to send.
+    """
+    submission = '23'  # """{{ STUDENT_ANSWER | e('py') }}""" (triple quotes required as submission might stretch over multiple lines)
+    return {'input': submission}
+
+
+# DO NOT MODIFY ANYTHING BELOW HERE
+SEPARATOR = "#<ab@17943918#@>#"
+
+
+def construct_submission_payload():
+    """
+    Constructs and returns the submission payload.
+    """
+    is_precheck = 0  # {{ IS_PRECHECK }}
+    task_id = 1  # {{ TASK_ID }}
+    user_id = 'adminUser'  # '{{ STUDENT.username }}'
+    assignment_id = '1'  # '{{ QUESTION.id }}'
+    language = 'de'  # ??
+    feedback_level = 1  # {{ FEEDBACK_LEVEL }}
+    return {
+        'taskId': task_id,
+        'userId': user_id,
+        'assignmentId': assignment_id,
+        'language': language,
+        'mode': 'RUN' if is_precheck else 'SUBMIT',
+        'feedbackLevel': feedback_level,
+        'submission': construct_submission_data()
+    }
+
+
+def send_submission(submission_payload):
+    """
+    Sends the submission to the task app.
+
+    :param submission_payload: The submission payload to send.
+    :return: The submission identifier.
+    """
+    url = f'http://{TASK_APP_HOST}:{TASK_APP_PORT}/api/submission?runInBackground=true'
+    try:
+        request_headers = {
+            **HEADERS,
+            'Content-Type': 'application/json'
+        }
+        response = requests.post(url, json=submission_payload, headers=request_headers, timeout=SUBMIT_TIMEOUT)
+        response.raise_for_status()
+        return response.text
+    except requests.ConnectionError as ex:
+        raise RuntimeError(
+            f'Could not establish connection to task-app {url} when trying to send the submission. Message: {ex}')
+    except requests.Timeout as ex:
+        raise RuntimeError(
+            f'Did not receive a response upon sending a submission to the task-app {url} within the timeout of {SUBMIT_TIMEOUT} seconds. Message: {ex}')
+    except requests.HTTPError as ex:
+        raise RuntimeError(
+            f'Received an HTTP error from the task-app {url} while sending the submission. Message: {ex}')
+    except Exception as ex:
+        raise RuntimeError(f'An unexpected error occurred while sending the submission. Message: {ex}')
+
+
+def fetch_grading(submission_id):
+    """
+    Fetches the grading from the task app.
+
+    :param submission_id: The submission identifier.
+    :return: The grading result.
+    """
+    url = f'http://{TASK_APP_HOST}:{TASK_APP_PORT}/api/submission/{submission_id}/result'
+    is_precheck = 0  # {{ IS_PRECHECK }}
+    if is_precheck:
+        url += '?delete=true'
+    try:
+        request_headers = {
+            **HEADERS,
+            'X-API-TIMEOUT': f'{GRADING_TIMEOUT - 2}'
+        }
+        response = requests.get(url, headers=request_headers, timeout=GRADING_TIMEOUT)
+        response.raise_for_status()
+        return response.json()
+    except requests.ConnectionError as ex:
+        raise RuntimeError(
+            f'Could not establish connection to task-app {url} when trying to fetch the grading. Message: {ex}')
+    except requests.Timeout as ex:
+        raise RuntimeError(
+            f'Did not receive a response upon fetching the grading from the task-app {url} within the timeout of {GRADING_TIMEOUT} seconds. Message: {ex}')
+    except requests.HTTPError as ex:
+        raise RuntimeError(
+            f'Received an HTTP error from the task-app {url} while fetching the grading. Message: {ex}')
+    except Exception as ex:
+        raise RuntimeError(f'An unexpected error occurred while fetching the grading. Message: {ex}')
+
+
+def construct_feedback(grading):
+    """
+    Constructs the feedback object.
+    :param grading: The grading information.
+    """
+    mark = grading['points'] / grading['maxPoints']
+    criteria = [{
+        'fraction': mark,
+        'result': grading['generalFeedback'],
+        'criterion': 'Feedback',
+        'iscorrect': grading['points'] == grading['maxPoints']
+    }]
+
+    for c in grading['criteria']:
+        criteria.append({
+            'fraction': c['points'],
+            'result': c['feedback'],
+            'criterion': c['name'],
+            'iscorrect': c['passed']
+        })
+
+    return criteria
+
+
+def print_feedback(feedback):
+    """
+    Prints the feedback.
+    """
+    for c in feedback:
+        print(json.dumps(c))
+        print(SEPARATOR)
+
+
+def get_custom_error_feedback(reason):
+    """
+    Returns the error in the required format.
+    """
+    return [{
+        'fraction': 0,
+        'result': reason,
+        'criterion': 'N/A',
+        'iscorrect': False
+    }]
+
+
+def main():
+    """
+    Submits the student answer and prepares the grading result for CodeRunner.
+    """
+    try:
+        payload = construct_submission_payload()
+        submission_id = send_submission(payload)
+        grading = fetch_grading(submission_id)
+        feedback = construct_feedback(grading)
+        print_feedback(feedback)
+    except Exception as ex:
+        print_feedback(get_custom_error_feedback(f'An exception occurred: {ex}'))
+
+
+if __name__ == "__main__":
+    main()

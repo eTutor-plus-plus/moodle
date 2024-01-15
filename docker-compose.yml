@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+  # Moodle-Server
+  moodle:
+    container_name: etutor-moodle
+    image: moodlehq/moodle-php-apache:8.3-bookworm
+    depends_on:
+      - db
+      - mail
+    ports:
+      - target: 80      # port inside container
+        published: 8000 # publicily exposed port
+    networks:
+      - etutor-net
+    volumes:
+      - "./wwwroot:/var/www/html"
+
+  # MySQL
+  db:
+    container_name: etutor-moodle-db
+    image: mysql:8.0
+    command: >
+                --character-set-server=utf8mb4
+                --collation-server=utf8mb4_bin
+                --skip-log-bin
+    ports:
+      - target: 3306
+        published: 3306
+    networks:
+      - etutor-net
+    environment:
+      - MYSQL_ROOT_PASSWORD=moodleDbPwd
+      - MYSQL_USER=moodle
+      - MYSQL_PASSWORD=moodleDbPwd
+      - MYSQL_DATABASE=moodle
+    volumes:
+      - etutor-moodle-db-data:/var/lib/mysql
+
+  # Mail
+  mail:
+    container_name: etutor-moodle-mail
+    image: axllent/mailpit:latest
+    ports:
+      - target: 8025
+        published: 8026
+      - target: 1025
+        published: 1026
+    networks:
+      - etutor-net
+
+  # Jobe
+  jobe:
+    container_name: etutor-moodle-jobe
+    build:
+      context: ./jobe
+      dockerfile: Dockerfile
+    environment:
+      - SIM_JOBE_JOBS=16
+    networks:
+      - etutor-net
+    ports:
+      - target: 80      # port inside container
+        published: 8001 # publicily exposed port
+
+networks:
+  etutor-net:
+
+volumes:
+  etutor-moodle-db-data:
