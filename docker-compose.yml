@@ -59,9 +59,6 @@ services:
       - SIM_JOBE_JOBS=16
     networks:
       - etutor-net
-    ports:
-      - target: 80      # port inside container
-        published: 8001 # publicily exposed port
 
 networks:
   etutor-net:
