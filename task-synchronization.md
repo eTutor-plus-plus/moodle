@@ -25,9 +25,9 @@ Execute following steps as Moodle administrator in the Moodle System:
             - webservice/rest:use
             - moodle/category:manage
             - moodle/category:viewhiddencategories
+            - moodle/question:managecategory
             - moodle/question:add
             - moodle/question:editall
-            - moodle/question:managecategory
             - moodle/question:moveall
             - moodle/question:tagall
             - moodle/question:viewall
@@ -46,14 +46,15 @@ Execute following steps as Moodle administrator in the Moodle System:
         * Assign the previously created `etutor_sync` user to the previously created `web_service` role.
 4. **Add custom external service** in _Site Administration > Server > Web services > External services_
     1. **Add** service
-        * _Name:_ eTutor Course Category Sync
-        * _Short Name:_ etutor_ou_sync
+        * _Name:_ eTutor Sync
+        * _Short Name:_ etutor_sync
         * _Enabled_: true
         * _Authorised users only_: true
     2. **Add functions** in _Site Administration > Server > Web services > External services > Functions_
         * core_course_create_categories
         * core_course_get_categories
         * core_course_update_categories
+        * local_etutorsync_create_question_category
     3. **Add user** in _Site Administration > Server > Web services > External services > Authorised users_
         * Add the previously created `etutor_sync` user.
 5. **Configure question sync service**
@@ -85,7 +86,7 @@ Execute following steps as Moodle administrator in the Moodle System:
    Manage tokens_
     * _Name_: etutor_task_administration
     * _User_: The previously created `etutor_sync` user.
-    * _Service_: The previously created custom web service `etutor_ou_sync`.
+    * _Service_: The previously created custom web service `etutor_sync`.
     * _IP restriction_: enter if required
     * _Valid until_: set as required
 2. Set following settings in the applications' `application-[dev|prod].yml` file or the corresponding environment
