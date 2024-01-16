@@ -52,7 +52,7 @@ class create_course_category extends \core_external\external_api
         $id = $DB->insert_record('course_categories', [ // see https://www.examulator.com/er/output/tables/course_categories.html
             'name' => $data['name'],
             'idnumber' => $data['id']
-        ]);
+        ]); // see https://moodledev.io/docs/apis/core/dml#inserting-records
         $transaction->allow_commit();
 
         // Return a value as described in the returns function.
