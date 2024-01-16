@@ -10,6 +10,7 @@ To setup the development-environment execute the following steps:
 2. Execute file `download-moodle.[sh|bat]`
 3. Start docker containers `docker-compose up -d` and wait for containers to start up.
 4. Execute file `setup-moodle.[sh|bat]`
+5. See the `readme_moodle.txt` on how to enable the plugin.
 
 After installation moodle is available at `http://localhost:8000/`.
 

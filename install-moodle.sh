@@ -29,3 +29,4 @@ runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=enablewsdocume
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=debug --set=32767
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=cookiesecure --set=0
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=curlsecurityblockedhosts --set=""
+runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=guestloginbutton --set=0
