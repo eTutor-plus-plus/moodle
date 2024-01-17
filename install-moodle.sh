@@ -22,10 +22,11 @@ runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=forcelogin --s
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=cronclionly --set=0
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=cronremotepassword --set=secretCron
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=passwordpolicy --set=0
-runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --component=theme_boost --name=brandcolor --set=".navbar.navbar-light {background-color: #5ba755 !important;}"
-runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=smtphosts --set=etutor-moodle-mail:1026
+runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --component=theme_boost --name=scss --set=".navbar.navbar-light {background-color: #5ba755 !important;}"
+runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=smtphosts --set=etutor-moodle-mail:1025
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=noreplyaddress --set=etutor@example.com
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=enablewsdocumentation --set=1
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=debug --set=32767
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=cookiesecure --set=0
 runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=curlsecurityblockedhosts --set=""
+runuser -u www-data -- php /var/www/html/admin/cli/cfg.php --name=guestloginbutton --set=0

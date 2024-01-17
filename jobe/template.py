@@ -14,7 +14,7 @@ def construct_submission_data():
     """
     Constructs the submission data to send.
     """
-    submission = '23'  # """{{ STUDENT_ANSWER | e('py') }}""" (triple quotes required as submission might stretch over multiple lines)
+    submission = """{{ STUDENT_ANSWER | e('py') }}""" # (triple quotes required as submission might stretch over multiple lines)
     return {'input': submission}
 
 
@@ -26,12 +26,12 @@ def construct_submission_payload():
     """
     Constructs and returns the submission payload.
     """
-    is_precheck = 0  # {{ IS_PRECHECK }}
-    task_id = 1  # {{ TASK_ID }}
-    user_id = 'adminUser'  # '{{ STUDENT.username }}'
-    assignment_id = '1'  # '{{ QUESTION.id }}'
+    is_precheck = {{ IS_PRECHECK }}
+    task_id = {{ TASK_ID }}
+    user_id = {{ STUDENT.username }}'
+    assignment_id = {{ QUESTION.id }}'
     language = 'de'  # ??
-    feedback_level = 1  # {{ FEEDBACK_LEVEL }}
+    feedback_level = {{ FEEDBACK_LEVEL }}
     return {
         'taskId': task_id,
         'userId': user_id,
@@ -80,7 +80,7 @@ def fetch_grading(submission_id):
     :return: The grading result.
     """
     url = f'http://{TASK_APP_HOST}:{TASK_APP_PORT}/api/submission/{submission_id}/result'
-    is_precheck = 0  # {{ IS_PRECHECK }}
+    is_precheck = {{ IS_PRECHECK }}
     if is_precheck:
         url += '?delete=true'
     try:

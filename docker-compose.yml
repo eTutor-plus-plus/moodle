@@ -14,7 +14,8 @@ services:
     networks:
       - etutor-net
     volumes:
-      - "./wwwroot:/var/www/html"
+      - ./wwwroot:/var/www/html
+      - ./plugin:/var/www/html/local/etutorsync
 
   # MySQL
   db:

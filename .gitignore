@@ -44,16 +44,12 @@ $RECYCLE.BIN/
 *.lnk
 
 ### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
+.vscode/
 .history/
 *.vsix
 .history
 .ionide
+
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -97,6 +93,7 @@ $RECYCLE.BIN/
  .idea/modules
  *.iml
  *.ipr
+
 
 ### CUSTOM ###
 wwwroot/
