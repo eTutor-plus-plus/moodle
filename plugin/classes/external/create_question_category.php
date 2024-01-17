@@ -2,11 +2,18 @@
 
 namespace local_etutorsync\external;
 
+use core\event\question_category_created;
 use core_external\external_api;
 use core_external\restricted_context_exception;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
+use dml_exception;
+use dml_transaction_exception;
+use invalid_parameter_exception;
+use moodle_exception;
+use required_capability_exception;
+use stdClass;
 
 /**
  * Web Service to create a new question category.
@@ -39,11 +46,11 @@ class create_question_category extends external_api
      * @param array $data The data.
      * @return array The result.
      * @throws restricted_context_exception
-     * @throws \dml_exception
-     * @throws \dml_transaction_exception
-     * @throws \invalid_parameter_exception
-     * @throws \required_capability_exception
-     * @throws \coding_exception
+     * @throws dml_exception
+     * @throws dml_transaction_exception
+     * @throws invalid_parameter_exception
+     * @throws required_capability_exception
+     * @throws moodle_exception
      */
     public static function execute(array $data): array
     {
@@ -67,8 +74,20 @@ class create_question_category extends external_api
                 'parent' => 0
             ]);
             if (is_null($parent))
-                throw new \invalid_parameter_exception('Could not find top category for context');
+                throw new invalid_parameter_exception('Could not find top category for context');
             $parent_id = $parent->id;
+        } else { // Validate parent id belongs to the same context
+            if (!($DB->get_field('question_categories', 'contextid', ['id' => $parent_id]) == $cat_context->id)) {
+                throw new moodle_exception('cannotinsertquestioncatecontext', 'question', '',
+                    ['cat' => $data, 'ctx' => $cat_context->id]);
+            }
+        }
+
+        // Set idnumber to null, if it already exists, to prevent errors
+        $idnumber = $data['id'];
+        if ($DB->record_exists('question_categories',
+            ['idnumber' => $idnumber, 'contextid' => $cat_context->id])) {
+            $idnumber = null;
         }
 
         // Insert
@@ -78,9 +97,16 @@ class create_question_category extends external_api
             'contextid' => $cat_context->id,
             'info' => 'eTutor-generated category',
             'parent' => is_null($parent_id) ? 0 : $parent_id,
-            'stamp' => 'eutor+' . date('ymdHis') . '+' . $data['id']
+            'stamp' => make_unique_id_code()
         ]);
         $transaction->allow_commit();
+
+        // Log the creation of this category
+        $category = new stdClass();
+        $category->id = $id;
+        $category->contextid = $cat_context->id;
+        $event = question_category_created::create_from_question_category_instance($category);
+        $event->trigger();
 
         // Return a value as described in the returns function.
         return ['id' => $id];

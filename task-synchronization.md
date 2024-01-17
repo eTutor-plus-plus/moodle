@@ -55,6 +55,7 @@ Execute following steps as Moodle administrator in the Moodle System:
         * core_course_get_categories
         * core_course_update_categories
         * local_etutorsync_create_question_category
+        * local_etutorsync_update_question_category
     3. **Add user** in _Site Administration > Server > Web services > External services > Authorised users_
         * Add the previously created `etutor_sync` user.
 5. **Configure question sync service**

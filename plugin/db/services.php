@@ -10,6 +10,13 @@ $functions = [
 		'description' => 'Create a question category.',
 		'type' => 'write',
 		'ajax' => false,
-		'services' => []
-	]
+        'capabilities' => 'moodle/question:managecategory'
+	],
+    'local_etutorsync_update_question_category' => [
+        'classname' => 'local_etutorsync\external\update_question_category',
+        'description' => 'Update a question category.',
+        'type' => 'write',
+        'ajax' => false,
+        'capabilities' => 'moodle/question:managecategory'
+    ]
 ];
