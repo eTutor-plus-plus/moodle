@@ -28,6 +28,7 @@ def construct_submission_payload():
     """
     Constructs and returns the submission payload.
     """
+    is_precheck = {{ IS_PRECHECK }}
     task_id = {{ TASK_ID }}
     user_id = "{{ STUDENT.username }}"
     assignment_id = {{ QUESTION.id }}
@@ -115,7 +116,7 @@ def construct_feedback(grading):
     checks_passed = True
     test_results = [["Test","Feedback","Result"]]
     for c in grading['criteria']:
-        passed = 'TRUE' if c['passed']==1 else 'FAILED'
+        passed = 'OK' if c['passed']==1 else 'FAILED'
         test_results.append([
             c['name'],
             c['feedback'],
