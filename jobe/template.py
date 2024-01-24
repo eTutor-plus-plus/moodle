@@ -1,13 +1,15 @@
 import json
 import requests
 
+
+
 # Constants
-TASK_APP_HOST = '127.0.0.1'
+TASK_APP_HOST = '140.78.228.197'
 TASK_APP_PORT = '8081'
 TASK_APP_KEY = 'jobe-server-key'
 HEADERS = {'Accept': 'application/json', 'X-API-KEY': TASK_APP_KEY}
-SUBMIT_TIMEOUT = 10  # max. seconds for the submission id to be available
-GRADING_TIMEOUT = 15  # max. seconds for the grading to be available
+SUBMIT_TIMEOUT = 60  # max. seconds for the submission id to be available
+GRADING_TIMEOUT = 60  # max. seconds for the grading to be available
 
 
 def construct_submission_data():
@@ -15,7 +17,7 @@ def construct_submission_data():
     Constructs the submission data to send.
     """
     submission = """{{ STUDENT_ANSWER | e('py') }}""" # (triple quotes required as submission might stretch over multiple lines)
-    return {'input': submission}
+    return {"input" : submission}
 
 
 # DO NOT MODIFY ANYTHING BELOW HERE
@@ -26,20 +28,19 @@ def construct_submission_payload():
     """
     Constructs and returns the submission payload.
     """
-    is_precheck = {{ IS_PRECHECK }}
     task_id = {{ TASK_ID }}
-    user_id = {{ STUDENT.username }}'
-    assignment_id = {{ QUESTION.id }}'
-    language = 'de'  # ??
+    user_id = "{{ STUDENT.username }}"
+    assignment_id = {{ QUESTION.id }}
+    language = "de"  # ??
     feedback_level = {{ FEEDBACK_LEVEL }}
     return {
-        'taskId': task_id,
-        'userId': user_id,
-        'assignmentId': assignment_id,
-        'language': language,
-        'mode': 'RUN' if is_precheck else 'SUBMIT',
-        'feedbackLevel': feedback_level,
-        'submission': construct_submission_data()
+        "taskId": task_id,
+        "userId": user_id,
+        "assignmentId": assignment_id,
+        "language": language,
+        "mode": {{ TESTCASES[0].testcode }},
+        "feedbackLevel": feedback_level,
+        "submission": construct_submission_data()
     }
 
 
@@ -58,6 +59,7 @@ def send_submission(submission_payload):
         }
         response = requests.post(url, json=submission_payload, headers=request_headers, timeout=SUBMIT_TIMEOUT)
         response.raise_for_status()
+      
         return response.text
     except requests.ConnectionError as ex:
         raise RuntimeError(
@@ -109,33 +111,31 @@ def construct_feedback(grading):
     Constructs the feedback object.
     :param grading: The grading information.
     """
-    mark = grading['points'] / grading['maxPoints']
-    criteria = [{
-        'fraction': mark,
-        'result': grading['generalFeedback'],
-        'criterion': 'Feedback',
-        'iscorrect': grading['points'] == grading['maxPoints']
-    }]
-
+    is_precheck = {{ IS_PRECHECK }}
+    checks_passed = True
+    test_results = [["Test","Feedback","Result"]]
     for c in grading['criteria']:
-        criteria.append({
-            'fraction': c['points'],
-            'result': c['feedback'],
-            'criterion': c['name'],
-            'iscorrect': c['passed']
-        })
+        passed = 'TRUE' if c['passed']==1 else 'FAILED'
+        test_results.append([
+            c['name'],
+            c['feedback'],
+            passed
+        ])
+        if c['passed']== 0:
+            checks_passed = False
+    if is_precheck and checks_passed:
+        mark = 1
+    else:
+        mark = grading['points'] / grading['maxPoints']
+    criteria = {
+        'fraction': mark,
+        'testresults': test_results,
+        'prologuehtml': grading['generalFeedback']
+    }
+    
+    
 
     return criteria
-
-
-def print_feedback(feedback):
-    """
-    Prints the feedback.
-    """
-    for c in feedback:
-        print(json.dumps(c))
-        print(SEPARATOR)
-
 
 def get_custom_error_feedback(reason):
     """
@@ -143,7 +143,7 @@ def get_custom_error_feedback(reason):
     """
     return [{
         'fraction': 0,
-        'result': reason,
+        'got': reason,
         'criterion': 'N/A',
         'iscorrect': False
     }]
@@ -158,10 +158,17 @@ def main():
         submission_id = send_submission(payload)
         grading = fetch_grading(submission_id)
         feedback = construct_feedback(grading)
-        print_feedback(feedback)
+
+        # Include the result_columns in the final feedback output
+        
+
+        print(json.dumps(feedback))
+        
+        
     except Exception as ex:
         print_feedback(get_custom_error_feedback(f'An exception occurred: {ex}'))
 
 
 if __name__ == "__main__":
     main()
+
