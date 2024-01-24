@@ -4,7 +4,7 @@ import requests
 
 
 # Constants
-TASK_APP_HOST = '140.78.230.37'
+TASK_APP_HOST = '140.78.228.197'
 TASK_APP_PORT = '8081'
 TASK_APP_KEY = 'jobe-server-key'
 HEADERS = {'Accept': 'application/json', 'X-API-KEY': TASK_APP_KEY}
@@ -28,7 +28,6 @@ def construct_submission_payload():
     """
     Constructs and returns the submission payload.
     """
-    is_precheck = {{ IS_PRECHECK }}
     task_id = {{ TASK_ID }}
     user_id = "{{ STUDENT.username }}"
     assignment_id = {{ QUESTION.id }}
@@ -39,7 +38,7 @@ def construct_submission_payload():
         "userId": user_id,
         "assignmentId": assignment_id,
         "language": language,
-        "mode": "RUN" if is_precheck else "SUBMIT",
+        "mode": {{ TESTCASES[0].testcode }},
         "feedbackLevel": feedback_level,
         "submission": construct_submission_data()
     }
@@ -112,25 +111,22 @@ def construct_feedback(grading):
     Constructs the feedback object.
     :param grading: The grading information.
     """
-
     is_precheck = {{ IS_PRECHECK }}
     checks_passed = True
-    #Table generation for feedback
     test_results = [["Test","Feedback","Result"]]
     for c in grading['criteria']:
+        passed = 'TRUE' if c['passed']==1 else 'FAILED'
         test_results.append([
             c['name'],
             c['feedback'],
-            c['passed']
+            passed
         ])
         if c['passed']== 0:
             checks_passed = False
-    #if all prechecks passed sets the mark to 1 to get a white message output
     if is_precheck and checks_passed:
         mark = 1
     else:
         mark = grading['points'] / grading['maxPoints']
-
     criteria = {
         'fraction': mark,
         'testresults': test_results,
