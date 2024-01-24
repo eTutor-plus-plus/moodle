@@ -11,7 +11,7 @@ Execute following steps as Moodle administrator in the Moodle System:
    Protocols_
 3. **Create REST user**: Create a user that is allowed to call the REST endpoints.
     1. **Add a new role** in  _Site Administration > Users > Permissions > Define roles_
-        * _Use role or archetype__: No role
+        * _Use role or archetype_: No role
         * _Short name_: web_service
         * _Custom full name_: Web Service
         * _Custom description_: Web Service for eTutor Task Administration
@@ -58,9 +58,7 @@ Execute following steps as Moodle administrator in the Moodle System:
         * local_etutorsync_update_question_category
     3. **Add user** in _Site Administration > Server > Web services > External services > Authorised users_
         * Add the previously created `etutor_sync` user.
-5. **Configure question sync service**
-    1. TBD
-6. **Configure custom question fields** in _Site Administration > Plugins > Question bank plugins > Question custom
+5. **Configure custom question fields** in _Site Administration > Plugins > Question bank plugins > Question custom
    fields_
     1. **Add a new category** with name eTutor
     2. **Add a new custom field - Short text**
@@ -68,7 +66,7 @@ Execute following steps as Moodle administrator in the Moodle System:
         * _Short name_: etutor_task_id
         * _Description_: The eTutor task id.
         * _Required_: No
-        * _Unique data_: Yes
+        * _Unique data_: No
         * _Locked_: Yes
         * _Visible to_: Teachers
     2. **Add a new custom field - Date and time**
@@ -80,6 +78,7 @@ Execute following steps as Moodle administrator in the Moodle System:
         * _Include time_: Yes
         * _Locked_: Yes
         * _Visible to_: Teachers
+6. **Enable "Multi-language content" filter** in in _Site Administration > Plugins > Filters > Manage Filters_
 
 ## Task-Administration Configuration
 
