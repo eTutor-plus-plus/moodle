@@ -18,5 +18,12 @@ $functions = [
         'type' => 'write',
         'ajax' => false,
         'capabilities' => 'moodle/question:managecategory'
+    ],
+    'local_etutorsync_create_question' => [
+        'classname'   => 'local_etutorsync\external\create_question',
+        'classpath'   => 'local/myplugin/externallib.php',
+        'description' => 'Saves a new coderunner question.',
+        'type'        => 'write',
+        'ajax'        => false,
     ]
 ];
