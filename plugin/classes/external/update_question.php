@@ -17,7 +17,7 @@ use stdClass;
 require_once($CFG->dirroot . '/question/engine/lib.php');
 require_once($CFG->dirroot . '/question/editlib.php');
 
-class create_question extends external_api {
+class update_question extends external_api {
 
     public static function execute_parameters() : external_function_parameters{
     {
@@ -29,7 +29,9 @@ class create_question extends external_api {
                 'questiontext' => new external_value(PARAM_RAW, 'The description of the Question.'),
                 'points' => new external_value(PARAM_INT,'The Maximum points achiveable'),
                 'coderunnertype' => new external_value(PARAM_RAW,'The tasktype of the question'),
-                'templateparams' => new external_value(PARAM_RAW,'The template information to link the question to the task through coderunner')
+                'course_category_id' => new external_value(PARAM_INT, 'The id of the category.'),
+                'templateparams' => new external_value(PARAM_RAW,'The template information to link the question to the task through coderunner'),
+                'oldMoodleId'=> new external_value(PARAM_INT,'The old moodleID of the previous existing question')
             ], 'The input data.')
         ]);
     }
@@ -111,13 +113,11 @@ class create_question extends external_api {
         $DB->insert_record('question_coderunner_tests', $testcase);
 
         //a connection table from question to version where the id is added
-        $questionbank = new stdClass();
-        $questionbank->questioncategoryid = $data['category_id'];
-        $questionbank->idnumber = $question->id;
-        $questionbank->questionbankid = $DB->insert_record('question_bank_entries', $questionbank);
-        
+        $oldquestionversion = $DB->get_record('question_versions', array('questionid' => $data['oldMoodleId']));
+
         $questionversion = new stdClass();
-        $questionversion->questionbankentryid = $questionbank->questionbankid;
+        $questionversion->questionbankentryid = $oldquestionversion->questionbankentryid;
+        $questionversion->version = $oldquestionversion->version +1;
         $questionversion->questionid = $question->id;
         $DB->insert_record('question_versions',$questionversion);
         
