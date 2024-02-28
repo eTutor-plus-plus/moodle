@@ -7,7 +7,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 202401244;
+$plugin->version = 202401268;
 $plugin->requires = 2023100902.00; // Moodle 4.0
 $plugin->component = 'local_etutorsync';
 $plugin->maturity = MATURITY_ALPHA; // see https://moodledev.io/docs/apis/commonfiles/version.php#maturity
