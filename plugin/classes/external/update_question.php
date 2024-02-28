@@ -115,6 +115,13 @@ class update_question extends external_api {
         //a connection table from question to version where the id is added
         $oldquestionversion = $DB->get_record('question_versions', array('questionid' => $data['oldMoodleId']));
 
+        //Updating the context id of the question in the questionbankentry
+        $questionbankentry = $DB->get_record('question_bank_entries',array('id' => $oldquestionversion->questionbankentryid));
+        $questionbankentry->idnumber = $question->id;
+        $DB->update_record('question_bank_entries',$questionbankentry);
+
+
+        // creates a new version of the question with the created questionid
         $questionversion = new stdClass();
         $questionversion->questionbankentryid = $oldquestionversion->questionbankentryid;
         $questionversion->version = $oldquestionversion->version +1;

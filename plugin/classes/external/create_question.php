@@ -29,6 +29,7 @@ class create_question extends external_api {
                 'questiontext' => new external_value(PARAM_RAW, 'The description of the Question.'),
                 'points' => new external_value(PARAM_INT,'The Maximum points achiveable'),
                 'coderunnertype' => new external_value(PARAM_RAW,'The tasktype of the question'),
+                'course_category_id' => new external_value(PARAM_INT, 'The id of the category.'),
                 'templateparams' => new external_value(PARAM_RAW,'The template information to link the question to the task through coderunner')
             ], 'The input data.')
         ]);
@@ -116,6 +117,7 @@ class create_question extends external_api {
         $questionbank->idnumber = $question->id;
         $questionbank->questionbankid = $DB->insert_record('question_bank_entries', $questionbank);
         
+        //adds the question to questionbankentry which refers to the category
         $questionversion = new stdClass();
         $questionversion->questionbankentryid = $questionbank->questionbankid;
         $questionversion->questionid = $question->id;

@@ -40,9 +40,12 @@ class deprecate_old_question extends external_api {
         $cat_context = \context_coursecat::instance($data['course_category_id']);
         self::validate_context($cat_context);
         require_capability('moodle/question:editall', $cat_context);
+
         //start transaction
         $transaction = $DB->start_delegated_transaction();
 
+
+        //updates the Test of the Question to mark it as deprecated
         $question = $DB->get_record('question', array('id' => $data['question_id']), '*', MUST_EXIST);
         $question->name = $data['title_extension'] . $question->name;
         $DB->update_record('question', $question);
@@ -50,7 +53,7 @@ class deprecate_old_question extends external_api {
         
         $transaction->allow_commit();
 
-        return ['questionid' => $question->id]; // Return the created question ID
+        return ['questionid' => $question->id]; // Return updated Question Id
 
     }
 
