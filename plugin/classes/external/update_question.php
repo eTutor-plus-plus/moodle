@@ -27,7 +27,7 @@ class update_question extends external_api {
                 'id' => new external_value(PARAM_INT, 'The identifier of the Question.'),
                 'name' => new external_value(PARAM_RAW, 'The task name.'),
                 'questiontext' => new external_value(PARAM_RAW, 'The description of the Question.'),
-                'points' => new external_value(PARAM_INT,'The Maximum points achiveable'),
+                'points' => new external_value(PARAM_RAW,'The Maximum points achiveable'),
                 'coderunnertype' => new external_value(PARAM_RAW,'The tasktype of the question'),
                 'course_category_id' => new external_value(PARAM_INT, 'The id of the category.'),
                 'templateparams' => new external_value(PARAM_RAW,'The template information to link the question to the task through coderunner'),
