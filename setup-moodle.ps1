@@ -1,1 +1,1 @@
-Get-Content .\install-moodle.sh | docker exec -i etutor-moodle /bin/bash
+Get-Content .\docker\install-moodle.sh | docker exec -i etutor-moodle /bin/bash
