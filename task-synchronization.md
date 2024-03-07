@@ -57,6 +57,8 @@ Execute following steps as Moodle administrator in the Moodle System:
         * local_etutorsync_create_question_category
         * local_etutorsync_update_question_category
         * local_etutorsync_create_question
+        * local_etutorsync_deprecate_old_question
+        * local_etutorsync_update_question
     3. **Add user** in _Site Administration > Server > Web services > External services > Authorised users_
         * Add the previously created `etutor_sync` user.
 5. **Configure custom question fields** in _Site Administration > Plugins > Question bank plugins > Question custom

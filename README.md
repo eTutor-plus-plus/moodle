@@ -22,4 +22,4 @@ See [this document](task-synchronization.md) for configuring Moodle to make the 
 
 ## Task Submission
 
-Following settings must be made to the Moodle installation for the eTutor Task Submission to work:
+See [this document](task-customisation.md) for creating task types in Moodle.
