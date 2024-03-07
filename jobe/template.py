@@ -2,9 +2,8 @@ import json
 import requests
 
 
-
 # Constants
-TASK_APP_HOST = '140.78.228.197'
+TASK_APP_HOST = 'host.docker.internal'
 TASK_APP_PORT = '8081'
 TASK_APP_KEY = 'jobe-server-key'
 HEADERS = {'Accept': 'application/json', 'X-API-KEY': TASK_APP_KEY}
@@ -21,14 +20,10 @@ def construct_submission_data():
 
 
 # DO NOT MODIFY ANYTHING BELOW HERE
-SEPARATOR = "#<ab@17943918#@>#"
-
-
 def construct_submission_payload():
     """
     Constructs and returns the submission payload.
     """
-    is_precheck = {{ IS_PRECHECK }}
     task_id = {{ TASK_ID }}
     user_id = "{{ STUDENT.username }}"
     assignment_id = {{ QUESTION.id }}
@@ -39,7 +34,7 @@ def construct_submission_payload():
         "userId": user_id,
         "assignmentId": assignment_id,
         "language": language,
-        "mode": {{ TESTCASES[0].testcode }},
+        "mode": "{{ TESTCASES[0].testcode }}",
         "feedbackLevel": feedback_level,
         "submission": construct_submission_data()
     }
@@ -124,30 +119,29 @@ def construct_feedback(grading):
         ])
         if c['passed']== 0:
             checks_passed = False
+    
     if is_precheck and checks_passed:
-        mark = 1
+        mark = grading['maxPoints']
     else:
         mark = grading['points'] / grading['maxPoints']
+    
     criteria = {
         'fraction': mark,
         'testresults': test_results,
         'prologuehtml': grading['generalFeedback']
     }
-    
-    
-
     return criteria
+
 
 def get_custom_error_feedback(reason):
     """
     Returns the error in the required format.
     """
-    return [{
+    return {
         'fraction': 0,
-        'got': reason,
-        'criterion': 'N/A',
-        'iscorrect': False
-    }]
+        'testresults': [],
+        'prologuehtml': reason
+    }
 
 
 def main():
@@ -159,15 +153,9 @@ def main():
         submission_id = send_submission(payload)
         grading = fetch_grading(submission_id)
         feedback = construct_feedback(grading)
-
-        # Include the result_columns in the final feedback output
-        
-
         print(json.dumps(feedback))
-        
-        
     except Exception as ex:
-        print_feedback(get_custom_error_feedback(f'An exception occurred: {ex}'))
+        print(get_custom_error_feedback(f'An exception occurred: {ex}'))
 
 
 if __name__ == "__main__":
