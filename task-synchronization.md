@@ -29,10 +29,7 @@ Execute following steps as Moodle administrator in the Moodle System:
             - moodle/question:add
             - moodle/question:editall
             - moodle/question:moveall
-            - moodle/question:tagall
             - moodle/question:viewall
-            - qbank/customfields:changelockedcustomfields
-            - qbank/customfields:viewhiddencustomfields
     2. **Create user** in  _Site Administration > Users > Accounts > Add a new user_
         * _Username_: etutor_sync
         * _Choose an authentication method_: Manual account
@@ -57,29 +54,11 @@ Execute following steps as Moodle administrator in the Moodle System:
         * local_etutorsync_create_question_category
         * local_etutorsync_update_question_category
         * local_etutorsync_create_question
+        * local_etutorsync_deprecate_old_question
+        * local_etutorsync_update_question
     3. **Add user** in _Site Administration > Server > Web services > External services > Authorised users_
         * Add the previously created `etutor_sync` user.
-5. **Configure custom question fields** in _Site Administration > Plugins > Question bank plugins > Question custom
-   fields_
-    1. **Add a new category** with name eTutor
-    2. **Add a new custom field - Short text**
-        * _Name_: Task-ID
-        * _Short name_: etutor_task_id
-        * _Description_: The eTutor task id.
-        * _Required_: No
-        * _Unique data_: No
-        * _Locked_: Yes
-        * _Visible to_: Teachers
-    2. **Add a new custom field - Date and time**
-        * _Name_: Last Modification
-        * _Short name_: etutor_last_modification
-        * _Description_: The timestamp the task was last modified in the eTutor system.
-        * _Required_: No
-        * _Unique data_: No
-        * _Include time_: Yes
-        * _Locked_: Yes
-        * _Visible to_: Teachers
-6. **Enable "Multi-language content" filter** in in _Site Administration > Plugins > Filters > Manage Filters_
+5. **Enable "Multi-language content" filter** in in _Site Administration > Plugins > Filters > Manage Filters_
 
 ## Task-Administration Configuration
 

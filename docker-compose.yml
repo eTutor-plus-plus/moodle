@@ -4,7 +4,7 @@ services:
   # Moodle-Server
   moodle:
     container_name: etutor-moodle
-    image: moodlehq/moodle-php-apache:8.3-bookworm
+    image: moodlehq/moodle-php-apache:8.2
     depends_on:
       - db
       - mail
@@ -15,7 +15,10 @@ services:
       - etutor-net
     volumes:
       - ./wwwroot:/var/www/html
-      - ./plugin:/var/www/html/local/etutorsync
+      - ./plugin:/var/www/html/local/etutorsync:ro
+      - ./docker/defaults.php:/var/www/html/local/defaults.php:ro
+      - ./docker/configure_moodle.php:/var/www/html/admin/cli/configure_moodle.php:ro
+      - etutor-moodle-data:/var/www/moodledata
 
   # MySQL
   db:
@@ -53,11 +56,7 @@ services:
   # Jobe
   jobe:
     container_name: etutor-moodle-jobe
-    build:
-      context: ./jobe
-      dockerfile: Dockerfile
-    environment:
-      - SIM_JOBE_JOBS=16
+    image: etutorplusplus/jobeinabox:master
     networks:
       - etutor-net
 
@@ -66,3 +65,4 @@ networks:
 
 volumes:
   etutor-moodle-db-data:
+  etutor-moodle-data:

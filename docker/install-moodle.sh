@@ -1,0 +1,3 @@
+#!/bin/bash
+runuser -u www-data -- php /var/www/html/admin/cli/install.php --lang=en --wwwroot="http://localhost:8000/" --dataroot=/var/www/moodledata --dbtype=mysqli --dbhost=etutor-moodle-db --dbname=moodle --dbuser=moodle --dbpass=moodleDbPwd --dbport=3306 --fullname="eTutor Test-Environment" --shortname="eTutor" --summary="Moodle for eTutor Test-Environment" --adminuser=admin --adminpass=secret --adminemail=etutor@example.com --non-interactive --agree-license
+runuser -u www-data -- php /var/www/html/admin/cli/configure_moodle.php
