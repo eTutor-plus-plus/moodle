@@ -50,10 +50,7 @@ assign_capability('moodle/question:managecategory', CAP_ALLOW, $roleId, context_
 assign_capability('moodle/question:add', CAP_ALLOW, $roleId, context_system::instance(), true);
 assign_capability('moodle/question:editall', CAP_ALLOW, $roleId, context_system::instance(), true);
 assign_capability('moodle/question:moveall', CAP_ALLOW, $roleId, context_system::instance(), true);
-assign_capability('moodle/question:tagall', CAP_ALLOW, $roleId, context_system::instance(), true);
 assign_capability('moodle/question:viewall', CAP_ALLOW, $roleId, context_system::instance(), true);
-assign_capability('qbank/customfields:changelockedcustomfields', CAP_ALLOW, $roleId, context_system::instance(), true);
-assign_capability('qbank/customfields:viewhiddencustomfields', CAP_ALLOW, $roleId, context_system::instance(), true);
 cli_writeln('Assigned capabilities to role');
 
 // Create REST user
@@ -97,22 +94,6 @@ $serviceuser->externalserviceid = $serviceId;
 $serviceuser->userid = $userId;
 $webservicemanager->add_ws_authorised_user($serviceuser);
 cli_writeln('Added user to external service');
-
-// Create custom question fields
-use core_customfield\api;
-use core_customfield\category_controller;
-use core_customfield\field_controller;
-
-$category = category_controller::create(0, (object) ['name' => 'eTutor', 'component' => 'qbank_customfields', 'area' => 'question', 'itemid' => 0]);
-api::save_category($category);
-
-$field = field_controller::create(0, (object) ['name' => 'Task-ID', 'shortname' => 'etutor_task_id', 'description' => 'The eTutor task id.', 'type' => 'text', 'categoryid' => $category->get('id')], $category);
-api::save_field_configuration($field, (object) ['configdata' => ['locked' => 1, 'visibility' => 1]]);
-
-$field = field_controller::create(0, (object) ['name' => 'Last Modification', 'shortname' => 'etutor_last_modification', 'description' => 'The timestamp the task was last modified in the eTutor system.', 'type' => 'date', 'categoryid' => $category->get('id')], $category);
-api::save_field_configuration($field, (object) ['configdata' => ['locked' => 1, 'visibility' => 1, 'includetime' => 1]]);
-
-cli_writeln('Created eTutor question field category with ID ' . $category->get('id'));
 
 // Enable multi-language content
 $class = core_plugin_manager::resolve_plugininfo_class('filter');

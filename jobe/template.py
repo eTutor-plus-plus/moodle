@@ -121,7 +121,7 @@ def construct_feedback(grading):
             checks_passed = False
     
     if is_precheck and checks_passed:
-        mark = grading['maxPoints']
+        mark = 1
     else:
         mark = grading['points'] / grading['maxPoints']
     
