@@ -43,7 +43,7 @@ services:
 
   # Mail
   mail:
-    container_name: etutor-moodle-mail
+    container_name: etutor-mail
     image: axllent/mailpit:latest
     ports:
       - target: 8025
