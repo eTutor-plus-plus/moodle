@@ -1,6 +1,6 @@
 # Moodle Plugin
 
-This project contains the Moodle-plugin for synchronizing the eTutor tasks.
+This project contains the Moodle-plugin for synchronizing the eTutor tasks as well as a configuration for a preconfigured Moodle-Docker-Image.
 
 ## Development
 
@@ -18,8 +18,8 @@ The Moodle containers can be started with `docker-compose up -d`
 
 ## Task Synchronization
 
-See [this document](task-synchronization.md) for configuring Moodle to make the eTutor Task Synchronization work.
+See [this wiki-page](https://github.com/eTutor-plus-plus/moodle/wiki/Moodle%E2%80%90Configuration) for configuring Moodle to make the eTutor Task Synchronization work.
 
 ## Task Submission
 
-See [this document](task-customisation.md) for creating task types in Moodle.
+See [this wiki-page](https://github.com/eTutor-plus-plus/moodle/wiki/Task-Creation) for creating task types in Moodle.
