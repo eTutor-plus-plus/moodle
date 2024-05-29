@@ -24,4 +24,4 @@ COPY --chown=www-data:www-data ./docker/configure_moodle.php /var/www/html/admin
 COPY --chown=root:root ./docker/001-proxy.conf /etc/apache2/sites-available/
 
 # Proxy (required for communication moodle-task admin in docker environment)
-RUN a2enmod proxy && a2enmod proxy_http && a2enmod headers && a2ensite 001-proxy && echo 'Listen 8000' >> ports.conf
+RUN a2enmod proxy && a2enmod proxy_http && a2enmod headers && a2ensite 001-proxy && echo 'Listen 8000' >> /etc/apache2/ports.conf
