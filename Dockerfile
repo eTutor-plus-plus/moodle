@@ -21,6 +21,7 @@ RUN wget -O coderunner.zip https://moodle.org/plugins/download.php/29972/qtype_c
 # Copy files
 COPY --chown=www-data:www-data ./docker/defaults.php /var/www/html/local/
 COPY --chown=www-data:www-data ./docker/configure_moodle.php /var/www/html/admin/cli/
+COPY --chown=www-data:www-data ./plugin/ /var/www/html/local/etutorsync/
 COPY --chown=root:root ./docker/001-proxy.conf /etc/apache2/sites-available/
 
 # Proxy (required for communication moodle-task admin in docker environment)
