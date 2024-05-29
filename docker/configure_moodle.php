@@ -99,3 +99,8 @@ cli_writeln('Added user to external service');
 $class = core_plugin_manager::resolve_plugininfo_class('filter');
 $class::enable_plugin('multilang', 1);
 cli_writeln('Enabled multi-language content.');
+
+// Disable URL as Link
+$class = core_plugin_manager::resolve_plugininfo_class('filter');
+$class::enable_plugin('urltolink', -1);
+cli_writeln('Disabled url filter.');

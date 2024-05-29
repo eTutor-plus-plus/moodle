@@ -111,7 +111,7 @@ def construct_feedback(grading):
     checks_passed = True
     test_results = [["Test","Feedback","Result"]]
     for c in grading['criteria']:
-        passed = 'OK' if c['passed']==1 else 'FAILED'
+        passed = 'OK' if c['passed'] == 1 else 'FAILED'
         test_results.append([
             c['name'],
             c['feedback'],
