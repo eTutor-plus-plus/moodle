@@ -25,8 +25,8 @@ class update_question_category extends external_api
     {
         return new external_function_parameters([
             'data' => new external_single_structure([
-                'id' => new external_value(PARAM_INT, 'The question category identifier to update.'),
-                'course_category_id' => new external_value(PARAM_INT, 'The name of the course group this category belongs to. Cannot be updated, required for security check.'),
+                'id' => new external_value(PARAM_INT, 'The question category identifier to update (moodle-id, not etutor-id).'),
+                'course_category_id' => new external_value(PARAM_INT, 'The id of the course group this category belongs to. Cannot be updated, required for security check.'),
                 'parent_question_category_id' => new external_value(PARAM_INT, 'The identifier of the parent question category.', VALUE_DEFAULT, 0),
                 'name' => new external_value(PARAM_RAW, 'The name of the task category.')
             ], 'The input data.')

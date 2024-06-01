@@ -34,7 +34,7 @@ class create_question_category extends external_api
             'data' => new external_single_structure([
                 'course_category_id' => new external_value(PARAM_INT, 'The name of the course group this category should belong to.'),
                 'parent_question_category_id' => new external_value(PARAM_INT, 'The identifier of the parent question category.', VALUE_DEFAULT, 0),
-                'id' => new external_value(PARAM_INT, 'The task category identifier.'),
+                'id' => new external_value(PARAM_RAW, 'The task category identifier.'),
                 'name' => new external_value(PARAM_RAW, 'The name of the task category.')
             ], 'The input data.')
         ]);
