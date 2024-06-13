@@ -33,7 +33,8 @@ class update_question extends external_api
                 'coderunnertype' => new external_value(PARAM_RAW, 'The tasktype of the question'),
                 'course_category_id' => new external_value(PARAM_INT, 'The id of the category.'),
                 'templateparams' => new external_value(PARAM_RAW, 'The template information to link the question to the task through coderunner'),
-                'oldMoodleId' => new external_value(PARAM_INT, 'The old moodleID of the previous existing question')
+                'oldMoodleId' => new external_value(PARAM_INT, 'The old moodleID of the previous existing question'),
+                'examTask' => new external_value(PARAM_RAW, 'Whether this is an exam question, influences the submission mode used (true/false).')
             ], 'The input data.')
         ]);
     }
@@ -93,13 +94,14 @@ class update_question extends external_api
         $coderunner_options->templateparamsvald = $data['templateparams'];
         $coderunner_options->hoisttemplateparams = 1;
         $coderunner_options->displayfeedback = 1;
+        $coderunner_options->validateonsave = 0;
         $DB->insert_record('question_coderunner_options', $coderunner_options);
 
         // Insert test cases for precheck
         $testcase = new stdClass();
         $testcase->questionid = $question->id;
         $testcase->useasexample = 0;
-        $testcase->testcode = 'DIAGNOSE';
+        $testcase->testcode = $data['examTask'] == 'true' ? 'RUN' : 'DIAGNOSE';
         $testcase->testtype = 1;
         $testcase->hiderestiffail = 0;
         $testcase->display = 'SHOW';
@@ -120,18 +122,12 @@ class update_question extends external_api
         // a connection table from question to version where the id is added
         $oldquestionversion = $DB->get_record('question_versions', array('questionid' => $data['oldMoodleId']));
         if (is_object($oldquestionversion)) {
-            // Updating the context id of the question in the questionbankentry
-            $questionbankentry = $DB->get_record('question_bank_entries', array('id' => $oldquestionversion->questionbankentryid));
-            if (is_object($questionbankentry)) {
-                $questionbankentry->idnumber = $question->id;
-                $DB->update_record('question_bank_entries', $questionbankentry);
-            }
-
             // creates a new version of the question with the created questionid
             $questionversion = new stdClass();
             $questionversion->questionbankentryid = $oldquestionversion->questionbankentryid;
-            $questionversion->version = $oldquestionversion->version + 1;
             $questionversion->questionid = $question->id;
+            $questionversion->version = $oldquestionversion->version + 1;
+            $questionversion->status = 'ready';
             $DB->insert_record('question_versions', $questionversion);
         }
 
