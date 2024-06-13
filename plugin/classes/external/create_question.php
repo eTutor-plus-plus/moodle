@@ -33,6 +33,7 @@ class create_question extends external_api
                 'coderunnertype' => new external_value(PARAM_RAW, 'The tasktype of the question'),
                 'course_category_id' => new external_value(PARAM_INT, 'The id of the category.'),
                 'templateparams' => new external_value(PARAM_RAW, 'The template information to link the question to the task through coderunner'),
+                'examTask' => new external_value(PARAM_RAW, 'Whether this is an exam question, influences the submission mode used (true/false).')
             ], 'The input data.')
         ]);
     }
@@ -92,13 +93,14 @@ class create_question extends external_api
         $coderunner_options->templateparamsvald = $data['templateparams'];
         $coderunner_options->hoisttemplateparams = 1;
         $coderunner_options->displayfeedback = 1;
+        $coderunner_options->validateonsave = 0;
         $DB->insert_record('question_coderunner_options', $coderunner_options);
 
         // Insert test cases for precheck
         $testcase = new stdClass();
         $testcase->questionid = $question->id;
         $testcase->useasexample = 0;
-        $testcase->testcode = 'DIAGNOSE';
+        $testcase->testcode = $data['examTask'] == 'true' ? 'RUN' : 'DIAGNOSE';
         $testcase->testtype = 1;
         $testcase->hiderestiffail = 0;
         $testcase->display = 'SHOW';
@@ -119,13 +121,16 @@ class create_question extends external_api
         // a connection table from question to version where the id is added
         $questionbank = new stdClass();
         $questionbank->questioncategoryid = $data['category_id'];
-        $questionbank->idnumber = $question->id;
+        $questionbank->idnumber = $data['id'];
+        $questionbank->ownerid = $USER->id;
         $questionbank->questionbankid = $DB->insert_record('question_bank_entries', $questionbank);
 
         // adds the question to questionbankentry which refers to the category
         $questionversion = new stdClass();
         $questionversion->questionbankentryid = $questionbank->questionbankid;
         $questionversion->questionid = $question->id;
+        $questionversion->version = 1;
+        $questionversion->status = 'ready';
         $DB->insert_record('question_versions', $questionversion);
 
         $transaction->allow_commit();
