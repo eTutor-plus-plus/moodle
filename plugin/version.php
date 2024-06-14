@@ -13,6 +13,5 @@ $plugin->component = 'local_etutorsync';
 $plugin->maturity = MATURITY_RC; // see https://moodledev.io/docs/apis/commonfiles/version.php#maturity
 
 $plugin->dependencies = [
-	'qtype_coderunner' => 2023090800,
-	'qbank_customfields' => 2023100900
+	'qtype_coderunner' => 2023090800
 ];
