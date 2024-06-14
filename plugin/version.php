@@ -8,9 +8,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 20240613;
-$plugin->requires = 2023100902.00; // Moodle 4.0
+$plugin->requires = 2022112804.00; // Moodle 4.0
 $plugin->component = 'local_etutorsync';
-$plugin->maturity = MATURITY_BETA; // see https://moodledev.io/docs/apis/commonfiles/version.php#maturity
+$plugin->maturity = MATURITY_RC; // see https://moodledev.io/docs/apis/commonfiles/version.php#maturity
 
 $plugin->dependencies = [
 	'qtype_coderunner' => 2023090800,
