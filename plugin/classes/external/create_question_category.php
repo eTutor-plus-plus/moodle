@@ -2,18 +2,17 @@
 
 namespace local_etutorsync\external;
 
-use core\event\question_category_created;
-use core_external\external_api;
-use core_external\restricted_context_exception;
-use core_external\external_function_parameters;
-use core_external\external_single_structure;
-use core_external\external_value;
-use dml_exception;
-use dml_transaction_exception;
-use invalid_parameter_exception;
-use moodle_exception;
-use required_capability_exception;
-use stdClass;
+defined('MOODLE_INTERNAL') || die;
+
+require_once ("{$CFG->libdir}/externallib.php");
+
+use \core\event\question_category_created;
+use \dml_exception;
+use \dml_transaction_exception;
+use \invalid_parameter_exception;
+use \moodle_exception;
+use \required_capability_exception;
+use \stdClass;
 
 /**
  * Web Service to create a new question category.
@@ -21,21 +20,21 @@ use stdClass;
  * @package   local_etutorsync
  * @category  external
  */
-class create_question_category extends external_api
+class create_question_category extends \external_api
 {
     /**
      * Returns description of method parameters
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters(): external_function_parameters
+    public static function execute_parameters(): \external_function_parameters
     {
-        return new external_function_parameters([
-            'data' => new external_single_structure([
-                'course_category_id' => new external_value(PARAM_INT, 'The name of the course group this category should belong to.'),
-                'parent_question_category_id' => new external_value(PARAM_INT, 'The identifier of the parent question category.', VALUE_DEFAULT, 0),
-                'id' => new external_value(PARAM_RAW, 'The task category identifier.'),
-                'name' => new external_value(PARAM_RAW, 'The name of the task category.')
+        return new \external_function_parameters([
+            'data' => new \external_single_structure([
+                'course_category_id' => new \external_value(PARAM_INT, 'The name of the course group this category should belong to.'),
+                'parent_question_category_id' => new \external_value(PARAM_INT, 'The identifier of the parent question category.', VALUE_DEFAULT, 0),
+                'id' => new \external_value(PARAM_RAW, 'The task category identifier.'),
+                'name' => new \external_value(PARAM_RAW, 'The name of the task category.')
             ], 'The input data.')
         ]);
     }
@@ -45,12 +44,12 @@ class create_question_category extends external_api
      *
      * @param array $data The data.
      * @return array The result.
-     * @throws restricted_context_exception
-     * @throws dml_exception
-     * @throws dml_transaction_exception
-     * @throws invalid_parameter_exception
-     * @throws required_capability_exception
-     * @throws moodle_exception
+     * @throws \restricted_context_exception
+     * @throws \dml_exception
+     * @throws \dml_transaction_exception
+     * @throws \invalid_parameter_exception
+     * @throws \required_capability_exception
+     * @throws \moodle_exception
      */
     public static function execute(array $data): array
     {
@@ -115,12 +114,12 @@ class create_question_category extends external_api
     /**
      * Returns description of method result value.
      *
-     * @return \core_external\external_description
+     * @return \external_single_structure
      */
-    public static function execute_returns(): external_single_structure
+    public static function execute_returns(): \external_single_structure
     {
-        return new external_single_structure([
-            'id' => new external_value(PARAM_INT, 'Id of the created question category')
+        return new \external_single_structure([
+            'id' => new \external_value(PARAM_INT, 'Id of the created question category')
         ]);
     }
 }

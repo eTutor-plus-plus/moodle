@@ -2,11 +2,9 @@
 
 namespace local_etutorsync\external;
 
-use core_external\external_api;
-use core_external\restricted_context_exception;
-use core_external\external_function_parameters;
-use core_external\external_single_structure;
-use core_external\external_value;
+defined('MOODLE_INTERNAL') || die;
+
+require_once ("{$CFG->libdir}/externallib.php");
 
 /**
  * Web Service to update an existing question category.
@@ -14,21 +12,21 @@ use core_external\external_value;
  * @package   local_etutorsync
  * @category  external
  */
-class update_question_category extends external_api
+class update_question_category extends \external_api
 {
     /**
      * Returns description of method parameters
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters(): external_function_parameters
+    public static function execute_parameters(): \external_function_parameters
     {
-        return new external_function_parameters([
-            'data' => new external_single_structure([
-                'id' => new external_value(PARAM_INT, 'The question category identifier to update (moodle-id, not etutor-id).'),
-                'course_category_id' => new external_value(PARAM_INT, 'The id of the course group this category belongs to. Cannot be updated, required for security check.'),
-                'parent_question_category_id' => new external_value(PARAM_INT, 'The identifier of the parent question category.', VALUE_DEFAULT, 0),
-                'name' => new external_value(PARAM_RAW, 'The name of the task category.')
+        return new \external_function_parameters([
+            'data' => new \external_single_structure([
+                'id' => new \external_value(PARAM_INT, 'The question category identifier to update (moodle-id, not etutor-id).'),
+                'course_category_id' => new \external_value(PARAM_INT, 'The id of the course group this category belongs to. Cannot be updated, required for security check.'),
+                'parent_question_category_id' => new \external_value(PARAM_INT, 'The identifier of the parent question category.', VALUE_DEFAULT, 0),
+                'name' => new \external_value(PARAM_RAW, 'The name of the task category.')
             ], 'The input data.')
         ]);
     }
@@ -95,12 +93,12 @@ class update_question_category extends external_api
     /**
      * Returns description of method result value.
      *
-     * @return \core_external\external_description
+     * @return \external_single_structure
      */
-    public static function execute_returns(): external_single_structure
+    public static function execute_returns(): \external_single_structure
     {
-        return new external_single_structure([
-            'id' => new external_value(PARAM_INT, 'Id of the updated question category')
+        return new \external_single_structure([
+            'id' => new \external_value(PARAM_INT, 'Id of the updated question category')
         ]);
     }
 }

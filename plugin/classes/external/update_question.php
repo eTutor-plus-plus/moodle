@@ -2,10 +2,9 @@
 
 namespace local_etutorsync\external;
 
-use core_external\external_api;
-use core_external\external_function_parameters;
-use core_external\external_single_structure;
-use core_external\external_value;
+defined('MOODLE_INTERNAL') || die;
+
+require_once ("{$CFG->libdir}/externallib.php");
 use stdClass;
 
 /**
@@ -14,27 +13,27 @@ use stdClass;
  * @package   local_etutorsync
  * @category  external
  */
-class update_question extends external_api
+class update_question extends \external_api
 {
     /**
      * Returns description of method parameters
      *
-     * @return external_function_parameters
+     * @return \external_function_parameters
      */
-    public static function execute_parameters(): external_function_parameters
+    public static function execute_parameters(): \external_function_parameters
     {
-        return new external_function_parameters([
-            'data' => new external_single_structure([
-                'category_id' => new external_value(PARAM_INT, 'The name of the category this question should belong to.'),
-                'id' => new external_value(PARAM_INT, 'The identifier of the Question.'),
-                'name' => new external_value(PARAM_RAW, 'The task name.'),
-                'questiontext' => new external_value(PARAM_RAW, 'The description of the Question.'),
-                'points' => new external_value(PARAM_RAW, 'The Maximum points achiveable'),
-                'coderunnertype' => new external_value(PARAM_RAW, 'The tasktype of the question'),
-                'course_category_id' => new external_value(PARAM_INT, 'The id of the category.'),
-                'templateparams' => new external_value(PARAM_RAW, 'The template information to link the question to the task through coderunner'),
-                'oldMoodleId' => new external_value(PARAM_INT, 'The old moodleID of the previous existing question'),
-                'examTask' => new external_value(PARAM_RAW, 'Whether this is an exam question, influences the submission mode used (true/false).')
+        return new \external_function_parameters([
+            'data' => new \external_single_structure([
+                'category_id' => new \external_value(PARAM_INT, 'The name of the category this question should belong to.'),
+                'id' => new \external_value(PARAM_INT, 'The identifier of the Question.'),
+                'name' => new \external_value(PARAM_RAW, 'The task name.'),
+                'questiontext' => new \external_value(PARAM_RAW, 'The description of the Question.'),
+                'points' => new \external_value(PARAM_RAW, 'The Maximum points achiveable'),
+                'coderunnertype' => new \external_value(PARAM_RAW, 'The tasktype of the question'),
+                'course_category_id' => new \external_value(PARAM_INT, 'The id of the category.'),
+                'templateparams' => new \external_value(PARAM_RAW, 'The template information to link the question to the task through coderunner'),
+                'oldMoodleId' => new \external_value(PARAM_INT, 'The old moodleID of the previous existing question'),
+                'examTask' => new \external_value(PARAM_RAW, 'Whether this is an exam question, influences the submission mode used (true/false).')
             ], 'The input data.')
         ]);
     }
@@ -139,12 +138,12 @@ class update_question extends external_api
     /**
      * Returns description of method result value.
      *
-     * @return \core_external\external_description
+     * @return \external_single_structure
      */
-    public static function execute_returns(): external_single_structure
+    public static function execute_returns(): \external_single_structure
     {
-        return new external_single_structure([
-            'questionid' => new external_value(PARAM_INT, 'Question ID')
+        return new \external_single_structure([
+            'questionid' => new \external_value(PARAM_INT, 'Question ID')
         ]);
     }
 }
