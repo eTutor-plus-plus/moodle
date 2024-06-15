@@ -1,4 +1,4 @@
-FROM moodlehq/moodle-php-apache:8.2
+FROM moodlehq/moodle-php-apache:7.4
 
 # Enable Cron-job
 RUN apt-get update && \
@@ -6,7 +6,7 @@ RUN apt-get update && \
 	echo "*/5 * * * * runuser -u www-data -- php /var/www/html/admin/cli/cron.php" > /etc/cron.d/moodle
 
 # Download moodle
-RUN wget -O moodle.zip https://download.moodle.org/download.php/direct/stable404/moodle-4.4.zip && \
+RUN wget -O moodle.zip https://download.moodle.org/download.php/direct/stable401/moodle-4.1.4.zip && \
 	unzip moodle.zip && \
 	mv moodle/* /var/www/html && \
 	rm -rf moodle.zip moodle

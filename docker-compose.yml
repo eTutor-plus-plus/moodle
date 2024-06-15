@@ -2,7 +2,7 @@ services:
   # Moodle-Server
   moodle:
     container_name: etutor-moodle
-    image: moodlehq/moodle-php-apache:8.2
+    image: moodlehq/moodle-php-apache:7.4
     depends_on:
       - db
       - mail
