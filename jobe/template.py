@@ -128,6 +128,7 @@ def construct_feedback(grading):
     criteria = {
         'fraction': mark,
         'testresults': test_results,
+        'columnformats': ['%s', '%h', '%s'],
         'prologuehtml': grading['generalFeedback']
     }
     return criteria
