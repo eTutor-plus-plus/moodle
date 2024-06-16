@@ -70,7 +70,7 @@ class update_question_category extends external_api
                     'contextid' => $cat_context->id,
                     'parent' => 0
                 ]);
-                if (is_null($parent))
+                if (is_null($parent) || $parent == false)
                     throw new \invalid_parameter_exception('Could not find top category for context');
                 $parent_id = $parent->id;
             }
