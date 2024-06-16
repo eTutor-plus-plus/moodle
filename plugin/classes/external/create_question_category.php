@@ -57,7 +57,9 @@ class create_question_category extends \external_api
         ['data' => $data] = self::validate_parameters(self::execute_parameters(), ['data' => $data]);
 
         // Perform security checks
-        $cat_context = \context_coursecat::instance($data['course_category_id']);
+        $cat_context = \context_coursecat::instance($data['course_category_id'], MUST_EXIST);
+        if ($cat_context == false)
+            throw new invalid_parameter_exception('Could not find context. At least on course must exist in category for sync to work.');
         self::validate_context($cat_context);
         require_capability('moodle/question:managecategory', $cat_context);
 
@@ -70,9 +72,10 @@ class create_question_category extends \external_api
         if (is_null($parent_id) || $parent_id <= 0) {
             $parent = $DB->get_record('question_categories', [
                 'contextid' => $cat_context->id,
-                'parent' => 0
+                'parent' => 0,
+                'name' => 'top'
             ]);
-            if (is_null($parent))
+            if (is_null($parent) || $parent == false)
                 throw new invalid_parameter_exception('Could not find top category for context');
             $parent_id = $parent->id;
         } else { // Validate parent id belongs to the same context
