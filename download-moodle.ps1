@@ -1,5 +1,5 @@
 # Download Moodle
-Invoke-WebRequest -Uri "https://download.moodle.org/download.php/direct/stable404/moodle-4.4.zip" -OutFile "moodle.zip"
+Invoke-WebRequest -Uri "https://download.moodle.org/download.php/direct/stable404/moodle-4.4.1.zip" -OutFile "moodle.zip"
 Expand-Archive -Path "moodle.zip" -DestinationPath "."
 Rename-Item -Path "moodle" -NewName "wwwroot"
 Remove-Item "moodle.zip"

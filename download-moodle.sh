@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download Moodle
-wget -O moodle.zip https://download.moodle.org/download.php/direct/stable404/moodle-4.4.zip
+wget -O moodle.zip https://download.moodle.org/download.php/direct/stable404/moodle-4.4.1.zip
 unzip moodle.zip
 mv moodle wwwroot
 rm moodle.zip

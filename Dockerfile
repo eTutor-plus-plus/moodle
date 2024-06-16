@@ -6,7 +6,7 @@ RUN apt-get update && \
 	echo "*/5 * * * * runuser -u www-data -- php /var/www/html/admin/cli/cron.php" > /etc/cron.d/moodle
 
 # Download moodle
-RUN wget -O moodle.zip https://download.moodle.org/download.php/direct/stable404/moodle-4.4.zip && \
+RUN wget -O moodle.zip https://download.moodle.org/download.php/direct/stable404/moodle-4.4.1.zip && \
 	unzip moodle.zip && \
 	mv moodle/* /var/www/html && \
 	rm -rf moodle.zip moodle
