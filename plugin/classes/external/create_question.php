@@ -33,7 +33,8 @@ class create_question extends external_api
                 'coderunnertype' => new external_value(PARAM_RAW, 'The tasktype of the question'),
                 'course_category_id' => new external_value(PARAM_INT, 'The id of the category.'),
                 'templateparams' => new external_value(PARAM_RAW, 'The template information to link the question to the task through coderunner'),
-                'examTask' => new external_value(PARAM_RAW, 'Whether this is an exam question, influences the submission mode used (true/false).')
+                'examTask' => new external_value(PARAM_RAW, 'Whether this is an exam question, influences the submission mode used (true/false).'),
+                'tag' => new external_value(PARAM_RAW, 'The tag to create for the question.', VALUE_OPTIONAL)
             ], 'The input data.')
         ]);
     }
@@ -132,6 +133,42 @@ class create_question extends external_api
         $questionversion->version = 1;
         $questionversion->status = 'ready';
         $DB->insert_record('question_versions', $questionversion);
+
+        // create tag
+        if (!is_null($data['tag']) && strlen($data['tag']) > 0) {
+            $tagId = 0;
+
+            // find tag
+            $tag = $DB->get_record('tag', ['name' => $data['tag']]);
+            if (!is_object($tag) || $tag === false) {
+                $tagColl = new stdClass();
+                $tagColl->sortorder = 0;
+                $collId = $DB->insert_record('tag_coll', $tagColl);
+
+                $tag = new stdClass();
+                $tag->name = $data['tag'];
+                $tag->rawname = $data['tag'];
+                $tag->timemodified = time();
+                $tag->userid = $USER->id;
+                $tag->tagcollid = $collId;
+                $tagId = $DB->insert_record('tag', $tag);
+            } else {
+                $tagId = $tag->id;
+            }
+
+            // add tag to question
+            $tagInstance = new stdClass();
+            $tagInstance->tagid = $tagId;
+            $tagInstance->component = 'core_question';
+            $tagInstance->itemtype = 'question';
+            $tagInstance->itemid = $question->id;
+            $tagInstance->contextid = $cat_context->id;
+            $tagInstance->tiuserid = 0;
+            $tagInstance->ordering = 0;
+            $tagInstance->timecreated = time();
+            $tagInstance->timemodified = time();
+            $DB->insert_record('tag_instance', $tagInstance);
+        }
 
         $transaction->allow_commit();
 
